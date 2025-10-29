@@ -42,7 +42,8 @@ runs:
         -org "${{ inputs.org }}" \
         -branch "${{ inputs.branch }}" \
         -name "${{ inputs.pipeline_name }}" \
-        -environment "${{ inputs.environment }}" \
+        -environment "Development" \
         -duration "${{ inputs.duration }}" \
         -interval "${{ inputs.poll_interval }}"
+
 
