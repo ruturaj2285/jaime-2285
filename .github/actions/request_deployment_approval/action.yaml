@@ -55,8 +55,7 @@ runs:
     uses: ./.github/actions/az-devops-approval-request
     id: deployment_approval
     env:
-      # AZURE_DEVOPS_EXT_PAT: ${{ env.AZDO-PAT}}
-      AZURE_DEVOPS_EXT_PAT: "EGx5S1gh0wiMbXtaAcIoytDzN4emiLKWylAvDPNbJ7stJ0tIslYlJQQJ99BJACAAAAAKwsA2AAASAZDO36Db"
+      AZURE_DEVOPS_EXT_PAT: ${{ secrets.AZDO_PAT }}
     with:
       project: ${{ inputs.devOpsProj }}
       org: ${{ inputs.devOpsOrg }}
@@ -64,5 +63,6 @@ runs:
       pipeline_name: ${{ inputs.devOpsPipelineName }}
 
       environment: ${{ inputs.environment }}
+
 
 
