@@ -42,7 +42,7 @@ env:
 
 jobs:
   Linting_and_Formatting:
-    runs-on: ["jccai"]
+    runs-on: ubuntu-latest
     environment: production
     steps:
       - name: Checkout repository
@@ -85,7 +85,7 @@ jobs:
 
   build:
     environment: "build"
-    runs-on: ["jccai"]
+    runs-on: ubuntu-latest
 
     outputs:
       image_name: ${{ steps.image_name.outputs.result }}
