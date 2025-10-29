@@ -31,18 +31,42 @@ verify_request_expired(){
   fi
 }
 
+# request_approval(){
+#   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
+
+#   # Sets global RUN_ID variable...
+#   # az extension add --name azure-devops
+#   # az devops logout
+#   # echo "EGx5S1gh0wiMbXtaAcIoytDzN4emiLKWylAvDPNbJ7stJ0tIslYlJQQJ99BJACAAAAAKwsA2AAASAZDO36Db" | az devops login
+#   # az devops configure --defaults organization=https://dev.azure.com/hariom0502 project=JAIME-vebuin
+#   # az pipelines list --output table
+#   RUN_ID=`az pipelines run --name $PIPELINE_NAME --branch $BRANCH  --parameters "environment=$ENVIRONMENT" --project $PROJECT --org $ORG --query "id" -o tsv`
+
+#   echo "Approval request successfully sent."
+# }
+
 request_approval(){
   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
 
-  # Sets global RUN_ID variable...
-  # az extension add --name azure-devops
-  # az devops logout
-  # echo "EGx5S1gh0wiMbXtaAcIoytDzN4emiLKWylAvDPNbJ7stJ0tIslYlJQQJ99BJACAAAAAKwsA2AAASAZDO36Db" | az devops login
-  # az devops configure --defaults organization=https://dev.azure.com/hariom0502 project=JAIME-vebuin
-  # az pipelines list --output table
-  RUN_ID=`az pipelines run --name $PIPELINE_NAME --branch $BRANCH  --parameters "environment=$ENVIRONMENT" --project $PROJECT --org $ORG --query "id" -o tsv`
+  az extension add --name azure-devops -y
+  az devops logout || true
+  echo $AZURE_DEVOPS_EXT_PAT | az devops login
+  az devops configure --defaults organization=$ORG project=$PROJECT
 
-  echo "Approval request successfully sent."
+  RUN_ID=$(az pipelines run \
+    --name "$PIPELINE_NAME" \
+    --branch "$BRANCH" \
+    --parameters "environment=$ENVIRONMENT" \
+    --project "$PROJECT" \
+    --org "$ORG" \
+    --query "id" -o tsv)
+
+  if [ -z "$RUN_ID" ]; then
+    echo "❌ Failed to trigger pipeline — RUN_ID is empty. Check authentication or pipeline name."
+    exit 1
+  fi
+
+  echo "Approval request successfully sent. Run ID: $RUN_ID"
 }
 
 verify_approval(){
