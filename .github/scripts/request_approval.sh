@@ -35,6 +35,7 @@ request_approval(){
   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
 
   # Sets global RUN_ID variable...
+  az devops configure --defaults organization=https://dev.azure.com/hariom0502/ project=JAIME-vebuin
   az pipelines list --output table
   # RUN_ID=`az pipelines run --name $PIPELINE_NAME --branch $BRANCH  --parameters "environment=$ENVIRONMENT" --project $PROJECT --org $ORG --query "id" -o tsv`
 
