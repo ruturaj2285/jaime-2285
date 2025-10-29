@@ -72,8 +72,8 @@ verify_request_expired(){
 request_approval(){
   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
 
-  # Authenticate to Azure DevOps first
-  az devops login --organization "$ORG" --token "$AZURE_DEVOPS_EXT_PAT"
+  # Authenticate to Azure DevOps using PAT (piped via echo)
+  echo "$AZURE_DEVOPS_EXT_PAT" | az devops login --organization "$ORG"
 
   # Sets global RUN_ID variable...
   RUN_ID=$(az pipelines run --name "$PIPELINE_NAME" --branch "$BRANCH" --parameters "environment=$ENVIRONMENT" --project "$PROJECT" --org "$ORG" --query "id" -o tsv)
@@ -85,6 +85,7 @@ request_approval(){
 
   echo "Approval request successfully sent. Pipeline RUN_ID: $RUN_ID"
 }
+
 
 
 verify_approval(){
