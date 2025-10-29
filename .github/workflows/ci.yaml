@@ -7,7 +7,7 @@ on:
     branches:
       - "release/*"
       - "develop/*"
-      - main
+      - main  # remove
     tags:
       - "v*.*.*"
 
@@ -21,14 +21,17 @@ permissions:
 
 env:
   OPENAPI_FOLDER: docs
-  AWS_ECR_ARN_ID: "149653749155"     # Edit
-  AWS_ARN_ID_DEV: "813070094344"
-  AWS_ARN_ID_STG: "132772905962"
-  AWS_ARN_ID_PRD: "542585190769"
-  AWS_STS_USER: AssumeRoleForPipeline  # Edit
+  # AWS_ECR_ARN_ID: "149653749155"     # Edit
+  # AWS_ARN_ID_DEV: "813070094344"
+  # AWS_ARN_ID_STG: "132772905962"
+  # AWS_ARN_ID_PRD: "542585190769"
+  # AWS_STS_USER: AssumeRoleForPipeline  # Edit
   # AZ_SUBSCRIPTION_ID: c649caeb-f619-4f45-b199-48207ab3731e
   # AZ_CLIENT_ID: 3ba228ea-f261-4a76-8dd8-3b28e0d6730e
   # AZ_TENANT_ID: 2840389b-0f81-496f-b742-ac794a5da61e
+  AWS_ECR_ARN_ID: "227295996532"    
+  AWS_ARN_ID_DEV: "227295996532"  
+  AWS_STS_USER: jaime-role
   AZ_SUBSCRIPTION_ID: 618a2bb0-72e3-4d01-beef-27ad0d0f77d8
   AZ_CLIENT_ID: 6da1fa95-ac00-4e48-8a40-7b9483f48e83
   AZ_TENANT_ID: 13ee1f99-2c19-4ffe-8479-7229725bc499
@@ -38,26 +41,26 @@ env:
   AZ_DEVOPS_APPROVAL_PIPELINE_NAME: Deploy_Request
 
 jobs:
-  # Linting_and_Formatting:
-  #   runs-on: ["jccai"]
-  #   environment: production
-  #   steps:
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+  Linting_and_Formatting:
+    runs-on: ["jccai"]
+    environment: production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: 20
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-  #     - name: Install dependencies
-  #       run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-  #     - name: Run ESLint (linting)
-  #       run: npx eslint . --max-warnings=0
+      - name: Run ESLint (linting)
+        run: npx eslint . --max-warnings=0
 
-  #     - name: Run Prettier (formatting check)
-  #       run: npx prettier --check .
+      - name: Run Prettier (formatting check)
+        run: npx prettier --check .
 
   # OWASPZAP:
     # runs-on: ["jccai"]
@@ -80,49 +83,49 @@ jobs:
     #   - name: Run Prettier (formatting check)
     #     run: npx prettier --check .
 
-  # build:
-  #   environment: "build"
-  #   runs-on: ["jccai"]
+  build:
+    environment: "build"
+    runs-on: ["jccai"]
 
-  #   outputs:
-  #     image_name: ${{ steps.image_name.outputs.result }}
-  #     aws_assume_role: ${{ steps.build.outputs.aws_assume_role }}
-  #     aws_arn_id: ${{ steps.build.outputs.aws_arn_id }}
-  #     aws_region: ${{ steps.build.outputs.aws_region }}
-  #     az_subscription_id: ${{ steps.build.outputs.az_subscription_id }}
-  #     docker_tag: ${{ steps.build.outputs.docker_tag }}
-  #     environment: ${{ steps.build.outputs.environment }}
-  #     environment_display: ${{ steps.build.outputs.environment_display }}
-  #     envFile: ${{ steps.build.outputs.envFile}}
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
+    outputs:
+      image_name: ${{ steps.image_name.outputs.result }}
+      aws_assume_role: ${{ steps.build.outputs.aws_assume_role }}
+      aws_arn_id: ${{ steps.build.outputs.aws_arn_id }}
+      aws_region: ${{ steps.build.outputs.aws_region }}
+      az_subscription_id: ${{ steps.build.outputs.az_subscription_id }}
+      docker_tag: ${{ steps.build.outputs.docker_tag }}
+      environment: ${{ steps.build.outputs.environment }}
+      environment_display: ${{ steps.build.outputs.environment_display }}
+      envFile: ${{ steps.build.outputs.envFile}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Execute build for ${{ steps.image_name.outputs.result }}
-  #       uses: ./.github/actions/build
-  #       id: build
-  #       with:
-  #         # working-directory: ${{ matrix.files }}
-  #         AWS_ECR_ARN_ID: ${{ env.AWS_ECR_ARN_ID }}
-  #         AWS_REGION: ap-northeast-1
-  #         AWS_STS_USER: ${{ env.AWS_STS_USER }}
-  #         IMAGE_NAME: ${{ steps.image_name.outputs.result }}
+      - name: Execute build for ${{ steps.image_name.outputs.result }}
+        uses: ./.github/actions/build
+        id: build
+        with:
+          # working-directory: ${{ matrix.files }}
+          AWS_ECR_ARN_ID: ${{ env.AWS_ECR_ARN_ID }}
+          AWS_REGION: ap-northeast-1
+          AWS_STS_USER: ${{ env.AWS_STS_USER }}
+          IMAGE_NAME: ${{ steps.image_name.outputs.result }}
 
 
-  #         #DEV
-  #         IS_DEV: ${{ github.ref_type == 'branch' && startsWith(github.ref_name, 'develop') }}
-  #         AWS_ARN_ID_DEV: ${{ env.AWS_ARN_ID_DEV }}
-  #         AZ_SUBSCRIPTION_ID_DEV: ${{ env.AZ_SUBSCRIPTION_ID }}
+          #DEV
+          IS_DEV: ${{ github.ref_type == 'branch' && startsWith(github.ref_name, 'develop') }}
+          AWS_ARN_ID_DEV: ${{ env.AWS_ARN_ID_DEV }}
+          AZ_SUBSCRIPTION_ID_DEV: ${{ env.AZ_SUBSCRIPTION_ID }}
 
-  #         #STG
-  #         IS_STG: ${{ github.ref_type == 'branch' && startsWith(github.ref_name, 'release') }}
-  #         AWS_ARN_ID_STG: ${{ env.AWS_ARN_ID_STG }}
-  #         AZ_SUBSCRIPTION_ID_STG: ${{ env.AZ_SUBSCRIPTION_ID }}
+          #STG
+          IS_STG: ${{ github.ref_type == 'branch' && startsWith(github.ref_name, 'release') }}
+          AWS_ARN_ID_STG: ${{ env.AWS_ARN_ID_STG }}
+          AZ_SUBSCRIPTION_ID_STG: ${{ env.AZ_SUBSCRIPTION_ID }}
 
-  #         #PRD
-  #         IS_PROD: ${{ github.ref_type == 'tag' && !contains(github.ref_name, '-rc') || github.event_name == 'pull_request' }}
-  #         AWS_ARN_ID_PRD: ${{ env.AWS_ARN_ID_PRD }}
-  #         AZ_SUBSCRIPTION_ID_PRD: ${{ env.AZ_SUBSCRIPTION_ID }}
+          #PRD
+          IS_PROD: ${{ github.ref_type == 'tag' && !contains(github.ref_name, '-rc') || github.event_name == 'pull_request' }}
+          AWS_ARN_ID_PRD: ${{ env.AWS_ARN_ID_PRD }}
+          AZ_SUBSCRIPTION_ID_PRD: ${{ env.AZ_SUBSCRIPTION_ID }}
 
   # Inspector_Scan:
   #   environment: "build"
@@ -216,3 +219,4 @@ jobs:
   #       push: true
   #       tags: ${{ steps.meta.outputs.tags }}
    
+ 
