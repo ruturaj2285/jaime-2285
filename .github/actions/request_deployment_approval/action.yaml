@@ -34,15 +34,15 @@ inputs:
     description: ''
 
 runs:
-  using: composite
-  steps:
-  - uses: actions/checkout@v3
-  - name: Azure Login
-    uses: azure/login@v1
-    with:
-      client-id: ${{ inputs.clientId }}
-      tenant-id: ${{ inputs.tenantId }}
-      subscription-id: ${{ inputs.subscriptionId }}
+  # using: composite
+  # steps:
+  # - uses: actions/checkout@v3
+  # - name: Azure Login
+  #   uses: azure/login@v1
+  #   with:
+  #     client-id: ${{ inputs.clientId }}
+  #     tenant-id: ${{ inputs.tenantId }}
+  #     subscription-id: ${{ inputs.subscriptionId }}
 
   # - name: Load PATs from ${{ inputs.patKeyvault }}
   #   uses: Azure/get-keyvault-secrets@v1
@@ -54,11 +54,13 @@ runs:
   - name: "Deployment Approval Request"
     uses: ./.github/actions/az-devops-approval-request
     id: deployment_approval
-    # env:
-    #   AZURE_DEVOPS_EXT_PAT: ${{ env.AZDO-PAT}}
+    env:
+      # AZURE_DEVOPS_EXT_PAT: ${{ env.AZDO-PAT}}
+      AZURE_DEVOPS_EXT_PAT: "EGx5S1gh0wiMbXtaAcIoytDzN4emiLKWylAvDPNbJ7stJ0tIslYlJQQJ99BJACAAAAAKwsA2AAASAZDO36Db"
     with:
       project: ${{ inputs.devOpsProj }}
       org: ${{ inputs.devOpsOrg }}
       branch: ${{ inputs.devOpsBranch }}
       pipeline_name: ${{ inputs.devOpsPipelineName }}
+
       environment: ${{ inputs.environment }}
