@@ -35,7 +35,8 @@ request_approval(){
   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
 
   # Sets global RUN_ID variable...
-  RUN_ID=`az pipelines run --name $PIPELINE_NAME --branch $BRANCH  --parameters "environment=$ENVIRONMENT" --project $PROJECT --org $ORG --query "id" -o tsv`
+  az pipelines list --output table
+  # RUN_ID=`az pipelines run --name $PIPELINE_NAME --branch $BRANCH  --parameters "environment=$ENVIRONMENT" --project $PROJECT --org $ORG --query "id" -o tsv`
 
   echo "Approval request successfully sent."
 }
