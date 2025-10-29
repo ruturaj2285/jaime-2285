@@ -32,4 +32,5 @@ runs:
     run: chmod +x .github/scripts/request_approval.sh
 
   - shell: bash
-    run: ./.github/scripts/request_approval.sh -project ${{ inputs.project }} -org ${{ inputs.org }} -environment ${{ inputs.environment }} -branch ${{ inputs.branch }} -name ${{ inputs.pipeline_name }} -duration ${{ inputs.duration }} -interval ${{ inputs.poll_interval }}
+
+    run: ./.github/scripts/request_approval.sh -project ${{ inputs.project }} -org ${{ inputs.org }} -branch ${{ inputs.branch }} -name ${{ inputs.pipeline_name }} -duration 10 -interval 10
