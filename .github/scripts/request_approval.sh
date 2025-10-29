@@ -13,9 +13,17 @@ print_usage() {
 }
 
 main(){
+  echo "DEBUG: PROJECT=$PROJECT"
+  echo "DEBUG: ORG=$ORG"
+  echo "DEBUG: BRANCH=$BRANCH"
+  echo "DEBUG: PIPELINE_NAME=$PIPELINE_NAME"
+  echo "DEBUG: ENVIRONMENT=$ENVIRONMENT"
+  echo "DEBUG: AZURE_DEVOPS_EXT_PAT=${AZURE_DEVOPS_EXT_PAT:0:20}..." # Show first 20 chars
+  
   request_approval
   verify_approval
 }
+
 
 verify_request_expired(){
   local current_date=$(date +%s)
