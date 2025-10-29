@@ -45,29 +45,47 @@ verify_request_expired(){
 #   echo "Approval request successfully sent."
 # }
 
+# request_approval(){
+#   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
+
+#   az extension add --name azure-devops -y
+#   az devops logout || true
+#   echo $AZURE_DEVOPS_EXT_PAT | az devops login
+#   az devops configure --defaults organization=$ORG project=$PROJECT
+
+#   RUN_ID=$(az pipelines run \
+#     --name "$PIPELINE_NAME" \
+#     --branch "$BRANCH" \
+#     --parameters "environment=$ENVIRONMENT" \
+#     --project "$PROJECT" \
+#     --org "$ORG" \
+#     --query "id" -o tsv)
+
+#   if [ -z "$RUN_ID" ]; then
+#     echo "❌ Failed to trigger pipeline — RUN_ID is empty. Check authentication or pipeline name."
+#     exit 1
+#   fi
+
+#   echo "Approval request successfully sent. Run ID: $RUN_ID"
+# }
+
 request_approval(){
   echo "Requesting approval for [${ENVIRONMENT}]... deployment"
 
-  az extension add --name azure-devops -y
-  az devops logout || true
-  echo $AZURE_DEVOPS_EXT_PAT | az devops login
-  az devops configure --defaults organization=$ORG project=$PROJECT
+  # Authenticate to Azure DevOps first
+  az devops login --organization "$ORG" --token "$AZURE_DEVOPS_EXT_PAT"
 
-  RUN_ID=$(az pipelines run \
-    --name "$PIPELINE_NAME" \
-    --branch "$BRANCH" \
-    --parameters "environment=$ENVIRONMENT" \
-    --project "$PROJECT" \
-    --org "$ORG" \
-    --query "id" -o tsv)
+  # Sets global RUN_ID variable...
+  RUN_ID=$(az pipelines run --name "$PIPELINE_NAME" --branch "$BRANCH" --parameters "environment=$ENVIRONMENT" --project "$PROJECT" --org "$ORG" --query "id" -o tsv)
 
   if [ -z "$RUN_ID" ]; then
     echo "❌ Failed to trigger pipeline — RUN_ID is empty. Check authentication or pipeline name."
     exit 1
   fi
 
-  echo "Approval request successfully sent. Run ID: $RUN_ID"
+  echo "Approval request successfully sent. Pipeline RUN_ID: $RUN_ID"
 }
+
 
 verify_approval(){
   verify_request_expired
