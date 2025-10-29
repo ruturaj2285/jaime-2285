@@ -34,6 +34,8 @@ runs:
     run: chmod +x .github/scripts/request_approval.sh
 
   - shell: bash
+    env:
+      AZURE_DEVOPS_EXT_PAT: ${{ env.AZURE_DEVOPS_EXT_PAT }}
     run: |
       ./.github/scripts/request_approval.sh \
         -project "${{ inputs.project }}" \
@@ -43,3 +45,4 @@ runs:
         -environment "${{ inputs.environment }}" \
         -duration "${{ inputs.duration }}" \
         -interval "${{ inputs.poll_interval }}"
+
