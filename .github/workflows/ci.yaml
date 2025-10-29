@@ -177,6 +177,7 @@ jobs:
           clientId: ${{ env.AZ_CLIENT_ID }}
           tenantId: ${{ env.AZ_TENANT_ID}}
           subscriptionId: ${{ env.AZ_SUBSCRIPTION_ID }}
+          azdo_pat: ${{ secrets.AZDO_PAT }}
           # patKeyvault: JERA-Terraform-KeyVault
           # patKeyvaultSecrets: AZDO-PAT,GITHUB-PAT
     
